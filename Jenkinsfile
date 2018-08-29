@@ -24,7 +24,7 @@ stages{
 
         stage ('Deployments'){
               steps {
-                        sh "scp -i /root/.jenkins/mykey.pem **/target/*.war ec2-user@${params.tomcat}:/opt/apache-tomcat-8.5.33/webapps"
+                        sh "scp /target/*.war ec2-user@${params.tomcat}:/opt/apache-tomcat-8.5.33/webapps"
                     }
                 }
 
