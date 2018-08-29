@@ -1,7 +1,15 @@
-
 pipeline {
     agent any
-    stages{
+
+    parameters {
+         string(name: 'tomcat', defaultValue: '34.228.9.186', description: 'test Server')
+         }
+
+    triggers {
+         pollSCM('* * * * *')
+     }
+
+stages{
         stage('Build'){
             steps {
                 sh 'mvn clean package'
@@ -13,5 +21,14 @@ pipeline {
                 }
             }
         }
-    }
+
+        stage ('Deployments'){
+            parallel{
+                stage ('Deploy to test'){
+                    steps {
+                        sh "scp -i /root/.jenkins/mykey.pem **/target/*.war ec2-user@${params.tomcat}:/opt/apache-tomcat-8.5.33/webapps"
+                    }
+                }
+
 }
+
